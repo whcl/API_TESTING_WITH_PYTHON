@@ -1,5 +1,5 @@
 import requests
-from utils import  set_auth_cookies
+from utils import set_auth_cookies
 
 """"
 Авторизация и получение куки

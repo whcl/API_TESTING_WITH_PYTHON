@@ -1,4 +1,4 @@
-import  requests
+import requests
 
 URL = "https://playground.learnqa.ru/api/get_auth_cookie"
 
