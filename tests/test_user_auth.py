@@ -2,6 +2,7 @@ import pytest
 import requests
 
 from lib.base_case import BaseCase
+from lib.assertions import Assertions
 
 url_login = "https://playground.learnqa.ru/api/user/login"
 url_auth = "https://playground.learnqa.ru/api/user/auth"
@@ -30,11 +31,10 @@ class TestAuth(BaseCase):
                                          "x-csrf-token":self.token,
                                      },
                                      cookies={"auth_sid":self.auth_sid})
-        user_id_from_auth = self.get_json_value(auth_response, "user_id")
 
-        assert user_id_from_auth == self.user_id_from_login, f'' \
-                                                        f'{self.user_id_from_auth} not equal' \
-                                                        f'{self.user_id_from_login}'
+        Assertions.assert_json_value_by_name(
+            auth_response, "user_id", self.user_id_from_login,"User id from login is not equal to user id from auth"
+        )
 
 
     @pytest.mark.parametrize('condition', exclude_params)
@@ -49,7 +49,7 @@ class TestAuth(BaseCase):
                                          cookies={
                                              "auth_sid":self.auth_sid
                                          })
-        user_id_from_auth = self.get_json_value(auth_response, "user_id")
 
-        assert user_id_from_auth == 0, f'' \
-                                       f'{user_id_from_auth} with condition: {condition}'
+        Assertions.assert_json_value_by_name(
+            auth_response, "user_id", 0, f"User id from login is not equal to 0 "
+                                         f"with condition {condition}")
