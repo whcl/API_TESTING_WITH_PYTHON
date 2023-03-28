@@ -4,7 +4,8 @@ from lib.logger_request import LoggerRequest
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 
-#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
+
+# TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
 class TestUserRegister(BaseCase):
     def setup(self):
@@ -26,8 +27,9 @@ class TestUserRegister(BaseCase):
         response = LoggerRequest.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content. decode("utf-8") == f"Users with email '{email}' already exists",f"" \
-                                                                                 f"Unexpected content {response.content}"
+        assert response.content.decode("utf-8") == f"" \
+                                                   f"Users with email '{email}' " \
+                                                   f"already exists Unexpected content {response.content} "
 
     def test_success_create_user(self):
         data = {

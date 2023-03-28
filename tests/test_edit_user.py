@@ -3,12 +3,13 @@ from lib.assertions import Assertions
 from lib.base_case import BaseCase
 
 url_login = "/user/login/"
-#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
+
+
+# TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
 class TestEditUser(BaseCase):
     def setup(self):
-
-        #register
+        # register
         data = self.prepare_registration_data()
         response = LoggerRequest.post("/user/", data=data)
 
@@ -21,8 +22,8 @@ class TestEditUser(BaseCase):
         self.password = data['password']
         self.user_id = self.get_json_value(response, "id")
 
-        #login
-        data ={
+        # login
+        data = {
             'email': self.email,
             'password': self.password
         }
@@ -32,21 +33,21 @@ class TestEditUser(BaseCase):
     def test_edit_user(self):
         new_name = "Changed name"
         edit_response = LoggerRequest.put(f"/user/{self.user_id}",
-                                     headers={
-                                         "x-csrf-token": self.token,
-                                     },
-                                     cookies={"auth_sid": self.auth_sid},
-                                     data={
-                                         'firstName': new_name
-                                     })
+                                          headers={
+                                              "x-csrf-token": self.token,
+                                          },
+                                          cookies={"auth_sid": self.auth_sid},
+                                          data={
+                                              'firstName': new_name
+                                          })
         Assertions.assert_code_status(edit_response, 200)
 
-        #GET EDIT DATA
+        # GET EDIT DATA
         get_response = LoggerRequest.get(f"/user/{self.user_id}",
-                                headers={
-                                    "x-csrf-token": self.token,
-                                },
-                                cookies={"auth_sid": self.auth_sid})
+                                         headers={
+                                             "x-csrf-token": self.token,
+                                         },
+                                         cookies={"auth_sid": self.auth_sid})
 
         expected_fields = ["id", "username", "email", "firstName", "lastName"]
         Assertions.assert_code_status(get_response, 200)

@@ -5,7 +5,8 @@ from lib.assertions import Assertions
 url = "/user/"
 url_login = "/user/login"
 
-#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
+
+# TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
 class TestUserGet(BaseCase):
     def setup(self):
@@ -20,10 +21,10 @@ class TestUserGet(BaseCase):
 
     def test_get_user_with_auth(self):
         response = LoggerRequest.get(f"{url}{self.user_id_from_login}",
-                                headers={
-                                    "x-csrf-token": self.token,
-                                },
-                                cookies={"auth_sid": self.auth_sid})
+                                     headers={
+                                         "x-csrf-token": self.token,
+                                     },
+                                     cookies={"auth_sid": self.auth_sid})
 
         expected_fields = ["id", "username", "email", "firstName", "lastName"]
         Assertions.assert_code_status(response, 200)

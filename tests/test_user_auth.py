@@ -7,7 +7,8 @@ from lib.logger_request import LoggerRequest
 url_login = "/user/login"
 url_auth = "/user/auth"
 
-#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
+
+# TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
 
 class TestAuth(BaseCase):
@@ -16,7 +17,7 @@ class TestAuth(BaseCase):
         ("no_token")
     ]
 
-    def setup(self): #настройка окружения
+    def setup(self):  # настройка окружения
         data = {
             'email': 'vinkotov@example.com',
             'password': '1234'
@@ -27,31 +28,29 @@ class TestAuth(BaseCase):
         self.token = self.get_header(login_response, "x-csrf-token")
         self.user_id_from_login = self.get_json_value(login_response, "user_id")
 
-
     def test_positive_auth(self):
         auth_response = LoggerRequest.get(url_auth,
-                                     headers={
-                                         "x-csrf-token":self.token,
-                                     },
-                                     cookies={"auth_sid":self.auth_sid})
+                                          headers={
+                                              "x-csrf-token": self.token,
+                                          },
+                                          cookies={"auth_sid": self.auth_sid})
 
         Assertions.assert_json_value_by_name(
-            auth_response, "user_id", self.user_id_from_login,"User id from login is not equal to user id from auth"
+            auth_response, "user_id", self.user_id_from_login, "User id from login is not equal to user id from auth"
         )
-
 
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth(self, condition):
         if condition == "no_cookie":
             auth_response = LoggerRequest.get(url_auth,
-                                         headers={
-                                             "x-csrf-token":self.token
-                                         })
+                                              headers={
+                                                  "x-csrf-token": self.token
+                                              })
         elif condition == "no_token":
             auth_response = LoggerRequest.get(url_auth,
-                                         cookies={
-                                             "auth_sid":self.auth_sid
-                                         })
+                                              cookies={
+                                                  "auth_sid": self.auth_sid
+                                              })
 
         Assertions.assert_json_value_by_name(
             auth_response, "user_id", 0, f"User id from login is not equal to 0 "
