@@ -1,11 +1,14 @@
 import pytest
-import requests
 
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
+from lib.logger_request import LoggerRequest
 
-url_login = "https://playground.learnqa.ru/api/user/login"
-url_auth = "https://playground.learnqa.ru/api/user/auth"
+url_login = "/user/login"
+url_auth = "/user/auth"
+
+#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
+
 
 class TestAuth(BaseCase):
     exclude_params = [
@@ -18,7 +21,7 @@ class TestAuth(BaseCase):
             'email': 'vinkotov@example.com',
             'password': '1234'
         }
-        login_response = requests.post(url_login, data=data)
+        login_response = LoggerRequest.post(url_login, data=data)
 
         self.auth_sid = self.get_cookie(login_response, "auth_sid")
         self.token = self.get_header(login_response, "x-csrf-token")
@@ -26,7 +29,7 @@ class TestAuth(BaseCase):
 
 
     def test_positive_auth(self):
-        auth_response = requests.get(url_auth,
+        auth_response = LoggerRequest.get(url_auth,
                                      headers={
                                          "x-csrf-token":self.token,
                                      },
@@ -40,12 +43,12 @@ class TestAuth(BaseCase):
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth(self, condition):
         if condition == "no_cookie":
-            auth_response = requests.get(url_auth,
+            auth_response = LoggerRequest.get(url_auth,
                                          headers={
                                              "x-csrf-token":self.token
                                          })
         elif condition == "no_token":
-            auth_response = requests.get(url_auth,
+            auth_response = LoggerRequest.get(url_auth,
                                          cookies={
                                              "auth_sid":self.auth_sid
                                          })

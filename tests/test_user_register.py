@@ -1,9 +1,10 @@
 from datetime import datetime
 
-import requests
-
+from lib.logger_request import LoggerRequest
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
+
+#TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
 class TestUserRegister(BaseCase):
     def setup(self):
@@ -22,7 +23,7 @@ class TestUserRegister(BaseCase):
             'email': email
         }
 
-        response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
+        response = LoggerRequest.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 400)
         assert response.content. decode("utf-8") == f"Users with email '{email}' already exists",f"" \
@@ -36,7 +37,7 @@ class TestUserRegister(BaseCase):
             'lastName': 'learnqa',
             'email': self.email
         }
-        response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
+        response = LoggerRequest.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_value_has_key(response, "id")
