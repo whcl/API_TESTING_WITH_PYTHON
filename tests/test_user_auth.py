@@ -1,4 +1,5 @@
 import pytest
+import allure
 
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
@@ -10,7 +11,7 @@ url_auth = "/user/auth"
 
 # TODO - Отредактирвать тесты с учетом новых проверок и методов в BaseCase
 
-
+@allure.epic("Authorization cases")
 class TestAuth(BaseCase):
     exclude_params = [
         ("no_cookie"),
@@ -28,6 +29,7 @@ class TestAuth(BaseCase):
         self.token = self.get_header(login_response, "x-csrf-token")
         self.user_id_from_login = self.get_json_value(login_response, "user_id")
 
+    @allure.description("This test successfully authorize user by email and password")
     def test_positive_auth(self):
         auth_response = LoggerRequest.get(url_auth,
                                           headers={
@@ -39,6 +41,7 @@ class TestAuth(BaseCase):
             auth_response, "user_id", self.user_id_from_login, "User id from login is not equal to user id from auth"
         )
 
+    @allure.description("This test checks authorization without cookie or token")
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth(self, condition):
         if condition == "no_cookie":

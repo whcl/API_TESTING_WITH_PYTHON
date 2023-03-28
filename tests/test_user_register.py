@@ -27,9 +27,8 @@ class TestUserRegister(BaseCase):
         response = LoggerRequest.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"" \
-                                                   f"Users with email '{email}' " \
-                                                   f"already exists Unexpected content {response.content} "
+        assert response.content.decode("utf-8") == f"Users with email '{email}' already exists",\
+            f"Unexpected content {response.content} "
 
     def test_success_create_user(self):
         data = {
